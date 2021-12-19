@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.authentication',
     'apps.gym',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
