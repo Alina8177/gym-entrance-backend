@@ -1,0 +1,2 @@
+web: gunicorn web_service.wsgi
+release: python manage.py migrate
