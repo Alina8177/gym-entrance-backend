@@ -80,7 +80,7 @@ class UserRegisterSerializer(UserSetPasswordSerializer, serializers.ModelSeriali
 
 
 class PaymentCreateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Payment
         fields = ("id", "total", "user")

@@ -57,7 +57,7 @@ class UserViewSet(
             return self.partial_update(request, *args, **kwargs)
     
 
-class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = Payment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PaymentSerializer
@@ -74,6 +74,16 @@ class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
             self.serializer_class = PaymentSerializer
         return super().get_serializer_class()
     
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        payment = serializer.save()
+        user.balance += payment.total
+        user.save()
+        return Response(PaymentSerializer(payment).data, status=status.HTTP_201_CREATED)
+        
+    
     @action(detail=True, methods=['post'])
     def cancel(self, request, *args, **kwargs):
         payment = self.get_object()
@@ -81,4 +91,7 @@ class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
             return Response({'code': 'error', 'msg': 'This payment has successfully canceled before'}, status=status.HTTP_400_BAD_REQUEST)
         payment.status = PaymentStatus.CANCELED
         payment.save()
+        user = payment.user
+        user.balance -= payment.total
+        user.save()
         return Response(PaymentSerializer(payment).data)
