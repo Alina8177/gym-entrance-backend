@@ -10,6 +10,7 @@ psycopg2-binary = "*"
 pytz = "*"
 djangorestframework-simplejwt = "*"
 django-filter = "*"
+ipython = "*"
 
 [dev-packages]
 

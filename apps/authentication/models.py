@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db.models.fields import DecimalField
 
 
 class UserManager(BaseUserManager):
@@ -29,6 +30,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField("Email of user", null=False, blank=False, max_length=40, unique=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
