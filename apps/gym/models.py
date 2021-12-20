@@ -26,8 +26,7 @@ class Program(models.Model):
 class OrderStatus(models.TextChoices):
     OPEN = ("open", "Open")
     PAID = ("paid", "Paid")
-    ACTIVE = ("active", "Active")
-    INACTIVE = ("inactive", "Inactive")
+
 
 class Order(models.Model):
     uid = models.UUIDField(default=uuid.uuid4)
@@ -37,6 +36,10 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    valid_to = models.DateTimeField(null=True, blank=False)
+    gym = models.ForeignKey('gym.Gym', null=True,  on_delete=models.CASCADE, related_name='orders')
 
     def __str__(self) -> str:
         return str(self.uid)
+
+        
