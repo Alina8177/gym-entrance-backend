@@ -1,5 +1,7 @@
 from django.db import models
 
+import uuid
+
 # Create your models here.
 
 class Gym(models.Model):
@@ -20,3 +22,21 @@ class Program(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+class OrderStatus(models.TextChoices):
+    OPEN = ("open", "Open")
+    PAID = ("paid", "Paid")
+    ACTIVE = ("active", "Active")
+    INACTIVE = ("inactive", "Inactive")
+
+class Order(models.Model):
+    uid = models.UUIDField(default=uuid.uuid4)
+    order_by = models.ForeignKey('authentication.User', on_delete=models.CASCADE, related_name='orders')
+    status = models.CharField(default=OrderStatus.OPEN, choices=OrderStatus.choices, max_length=10)
+    programs = models.ManyToManyField('gym.Program')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self) -> str:
+        return str(self.uid)
