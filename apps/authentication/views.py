@@ -1,9 +1,9 @@
-from rest_framework import mixins, viewsets, permissions
+from rest_framework import mixins, viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .serializers import PaymentCreateSerializer, PaymentSerializer, UserRegisterSerializer, UserSerializer
-from .models import Payment, User
+from .models import Payment, PaymentStatus, User
 
 
 class UserViewSet(
@@ -57,7 +57,7 @@ class UserViewSet(
             return self.partial_update(request, *args, **kwargs)
     
 
-class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Payment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PaymentSerializer
@@ -66,3 +66,19 @@ class PaymentViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Up
         user = self.request.user
         queryset = self.queryset.filter(user=user)
         return queryset
+
+    def get_serializer_class(self):
+        if self.action in ['create']:
+            self.serializer_class = PaymentCreateSerializer
+        else:
+            self.serializer_class = PaymentSerializer
+        return super().get_serializer_class()
+    
+    @action(detail=True, methods=['post'])
+    def cancel(self, request, *args, **kwargs):
+        payment = self.get_object()
+        if payment.status == PaymentStatus.CANCELED:
+            return Response({'code': 'error', 'msg': 'This payment has successfully canceled before'}, status=status.HTTP_400_BAD_REQUEST)
+        payment.status = PaymentStatus.CANCELED
+        payment.save()
+        return Response(PaymentSerializer(payment).data)
