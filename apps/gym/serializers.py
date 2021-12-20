@@ -28,3 +28,9 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ("id", "uid", "status", "programs", "created_at", "updated_at","total", "valid_to", "gym")
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ("id", "uid", "programs", "gym")
+        read_only_fields = ("id", "uid",)

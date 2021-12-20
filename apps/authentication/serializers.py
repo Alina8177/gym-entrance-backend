@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions as django_exceptions
 from django.db import IntegrityError, transaction
 
-from .models import Payment, User
+from .models import Charge, Payment, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -89,3 +89,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ("id", "total", "created_at", "updated_at", "status",)
+
+class ChargeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Charge
+        fields = ("id", "order", "status", "created_at", "updated_at")

@@ -2,7 +2,7 @@ from rest_framework import mixins, viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .serializers import PaymentCreateSerializer, PaymentSerializer, UserRegisterSerializer, UserSerializer
+from .serializers import PaymentCreateSerializer, PaymentSerializer, UserRegisterSerializer, UserSerializer, ChargeSerializer
 from .models import Payment, PaymentStatus, User
 
 
@@ -42,6 +42,12 @@ class UserViewSet(
         else:
             serializer_class = UserSerializer
         return serializer_class
+    
+    @action(detail=False, methods=['get'])
+    def charges(self, request, *args, **kwargs):
+        user = request.user
+        charges = user.charges.all()
+        return Response(ChargeSerializer(charges, many=True).data)
 
     @action(["get", "put", "patch"], detail=False)
     def me(self, request, *args, **kwargs):
