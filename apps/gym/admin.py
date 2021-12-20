@@ -1,9 +1,6 @@
 from django.contrib import admin
 
-from apps.gym.models import Gym
-from apps.gym.models import Program
-from apps.gym.models import Order
-# Register your models here.
+from apps.gym.models import Gym, Program, Order
 
 @admin.register(Gym)
 class GymAdmin(admin.ModelAdmin):
