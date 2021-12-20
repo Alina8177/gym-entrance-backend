@@ -53,3 +53,16 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, default=PaymentStatus.PAID, choices=PaymentStatus.choices)
+
+
+class ChargeStatus(models.TextChoices):
+    SUCCESS = ("success", "Success")
+    CANCELED = ("canceled", "Canceled")
+
+
+class Charge(models.Model):
+    order = models.ForeignKey('gym.Order', on_delete=models.CASCADE, related_name='charges')
+    user = models.ForeignKey('authentication.User', on_delete=models.CASCADE, related_name='charges')
+    status = models.CharField(max_length=10, choices=ChargeStatus.choices, default=ChargeStatus.SUCCESS)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
