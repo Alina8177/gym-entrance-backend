@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from apps.authentication.models import User
+from apps.authentication.models import Payment, User
 from .forms import UserCreationForm, UserChangeForm
 
 # Register your models here.
@@ -27,3 +27,10 @@ class UserAdmin(BaseUserAdmin):
     )
 
     ordering = ['-id']
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ["user", "total", "created_at", "status"]
+
+    list_filter = ["status",]
