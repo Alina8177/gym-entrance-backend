@@ -11,6 +11,9 @@ pytz = "*"
 djangorestframework-simplejwt = "*"
 django-filter = "*"
 ipython = "*"
+whitenoise = "*"
+python-dotenv = "*"
+django-environ = "*"
 
 [dev-packages]
 
