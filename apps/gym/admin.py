@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from apps.gym.models import Gym
 from apps.gym.models import Program
+from apps.gym.models import Order
 # Register your models here.
 
 @admin.register(Gym)
@@ -17,3 +18,10 @@ class ProgramAdmin(admin.ModelAdmin):
     search_fields = ["name",]
 
     list_filter = ["is_archive",]
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ["uid", "order_by", "status", "total"]
+
+    list_filter = ["status"]
+
